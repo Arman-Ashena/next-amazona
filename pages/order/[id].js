@@ -6,8 +6,6 @@ import {
   Link,
   List,
   ListItem,
-  MenuItem,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -24,9 +22,7 @@ import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import useStyle from '../../utils/styles';
-import CheckOutWizard from '../../components/checkOutWizard';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import { getError } from '../../utils/error';
 
 const reducer = (state, action) => {

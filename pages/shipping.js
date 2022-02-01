@@ -5,8 +5,6 @@ import { Store } from '../utils/store';
 import useStyles from '../utils/styles';
 import Cookies from 'js-cookie';
 import { Controller, useForm } from 'react-hook-form';
-//import CheckoutWizard from '../components/CheckoutWizard';
-
 import {
   List,
   ListItem,
@@ -14,7 +12,7 @@ import {
   TextField,
   Button,
 } from '@material-ui/core';
-import CheckOutWizard from '../components/checkOutWizard';
+import CheckOutWizard from '../components/CheckOutWizard';
 export default function Shipping() {
   const {
     handleSubmit,

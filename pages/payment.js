@@ -10,9 +10,9 @@ import {
 } from '@material-ui/core';
 import { mergeClasses } from '@material-ui/styles';
 import Cookies from 'js-cookie';
-import { Router, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import React, { useContext, useState, useEffect } from 'react';
-import CheckOutWizard from '../components/checkOutWizard';
+import CheckOutWizard from '../components/CheckOutWizard';
 import Layout from '../components/Layout';
 import { Store } from '../utils/store';
 import useStyle from '../utils/styles';
