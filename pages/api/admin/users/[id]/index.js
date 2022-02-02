@@ -19,13 +19,7 @@ handler.put(async (req, res) => {
   const user = await User.findById(req.query.id);
   if (user) {
     user.name = req.body.name;
-    user.slug = req.body.slug;
-    user.image = req.body.image;
-    user.category = req.body.category;
-    user.price = req.body.price;
-    user.count = req.body.count;
-    user.description = req.body.description;
-    user.brand = req.body.brand;
+    user.isAdmin = Boolean(req.body.isAdmin);
     await user.save();
     await db.disconnect();
     res.send({ message: 'user Updated Successfully' });

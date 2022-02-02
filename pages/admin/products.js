@@ -55,11 +55,11 @@ function AdminProducts() {
     if (!userInfo) {
       Router.push('/login');
     }
-
+    console.log('wert');
     async function fetchData() {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data, status } = await axios.get('/api/admin/products', {
+        const { data } = await axios.get('/api/admin/products', {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
 
