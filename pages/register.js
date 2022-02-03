@@ -47,9 +47,8 @@ export default function Register() {
       });
 
       dispatch({ type: 'USER_LOGIN', payload: data });
-
       Cookies.set('userInfo', JSON.stringify(data));
-
+      alert('you register successfully');
       router.push(redirect || '/');
     } catch (error) {
       console.log(error);
