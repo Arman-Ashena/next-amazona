@@ -51,6 +51,7 @@ export default function Register() {
       alert('you register successfully');
       router.push(redirect || '/');
     } catch (error) {
+      alert('error');
       console.log(error);
     }
   };

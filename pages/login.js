@@ -47,6 +47,7 @@ export default function Login() {
 
       router.push(redirect || '/');
     } catch (error) {
+      alert(error);
       console.log('userSubmit', error);
     }
   };

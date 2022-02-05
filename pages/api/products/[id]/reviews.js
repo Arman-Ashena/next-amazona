@@ -39,6 +39,12 @@ handler.post(async (req, res) => {
           },
         }
       );
+      const updateProduct = await Product.findById(req.query.id);
+      updateProduct.numReviews = updateProduct.reviews.length;
+      updateProduct.rating =
+        updateProduct.reviews.reduce((a, c) => c.rating + a, 0) /
+        updateProduct.reviews.length;
+      await updateProduct.save();
       await db.disconnect();
       return res.send({ message: 'review Updated' });
     } else {
