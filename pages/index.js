@@ -12,10 +12,9 @@ import Layout from '../components/Layout';
 import NextLink from 'next/link';
 import db from '../utils/db';
 import Product from '../models/Product';
-import Cookies from 'js-cookie';
+import { Rating } from '@material-ui/lab';
 
 export default function Home(props) {
-  console.log('qw', Cookies.get('userInfo'));
   const { products } = props;
   return (
     <Layout>
@@ -35,6 +34,7 @@ export default function Home(props) {
                     ></CardMedia>
                     <CardContent>
                       <Typography>{item.name}</Typography>
+                      <Rating value={item.rating} readOnly></Rating>
                     </CardContent>
                   </CardActionArea>
                 </NextLink>
@@ -55,8 +55,8 @@ export default function Home(props) {
 
 export async function getServerSideProps() {
   await db.connect();
-  const products = await Product.find({}).lean();
-
+  //get rid of field reviews from fetching Product data from database
+  const products = await Product.find({}, '-reviews').lean();
   await db.disconnect();
   return {
     props: { products: products.map(db.convertDocToObj) },
