@@ -1,10 +1,10 @@
-import axios from 'axios';
-import dynamic from 'next/dynamic';
-import { Router, useRouter } from 'next/router';
-import React, { useContext, useReducer, useEffect } from 'react';
-import { Store } from '../../../utils/store';
-import { getError } from '../../../utils/error';
-import Layout from '../../../components/Layout';
+import axios from "axios";
+import dynamic from "next/dynamic";
+import { Router, useRouter } from "next/router";
+import React, { useContext, useReducer, useEffect } from "react";
+import { Store } from "../../../utils/store";
+import { getError } from "../../../utils/error";
+import Layout from "../../../components/Layout";
 import {
   Button,
   Card,
@@ -15,51 +15,68 @@ import {
   ListItemText,
   TextField,
   Typography,
-} from '@material-ui/core';
-import useStyle from '../../../utils/styles';
-import NextLink from 'next/link';
-import { Controller, useForm } from 'react-hook-form';
+} from "@material-ui/core";
+import useStyle from "../../../utils/styles";
+import NextLink from "next/link";
+import { Controller, useForm } from "react-hook-form";
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'FETCH_REQUEST':
+    case "FETCH_REQUEST":
       return {
         ...state,
         loading: true,
-        error: '',
+        error: "",
       };
-    case 'FETCH_SUCCESS':
+    case "FETCH_SUCCESS":
       return {
         ...state,
         product: action.payload,
         loading: false,
-        error: '',
+        error: "",
       };
-    case 'FETCH_FAIL':
+    case "FETCH_FAIL":
       return {
         ...state,
         loading: false,
         error: action.payload,
       };
-    case 'UPDATE_REQUEST':
+    case "UPDATE_REQUEST":
       return {
         ...state,
         loadingUpdate: true,
-        errorUpdate: '',
+        errorUpdate: "",
       };
-    case 'UPDATE_SUCCESS':
+    case "UPDATE_SUCCESS":
       return {
         ...state,
         loadingUpdate: false,
-        errorUpdate: '',
+        errorUpdate: "",
       };
-    case 'UPDATE_FAIL':
+    case "UPDATE_FAIL":
       return {
         ...state,
         loadingUpdate: false,
         errorUpdate: action.payload,
       };
-
+    case "UPLOAD_REQUEST":
+      return {
+        ...state,
+        loadingUpload: true,
+        errorUpload: "",
+      };
+    case "UPLOAD_SUCCESS":
+      return {
+        ...state,
+        loadingUpload: false,
+        errorUpload: "",
+      };
+    case "UPLOAD_FAIL":
+      return {
+        ...state,
+        loadingUpload: false,
+        errorUpload: action.payload,
+      };
     default:
       state;
   }
@@ -70,32 +87,33 @@ function ProductEdit({ params }) {
   const { state } = useContext(Store);
   const { userInfo } = state;
   const router = useRouter();
-  const [{ loading, error, loadingUpdate }, dispatch] = useReducer(reducer, {
-    loading: false,
-    error: '',
-  });
+  const [{ loading, error, loadingUpdate, loadingUpload }, dispatch] =
+    useReducer(reducer, {
+      loading: false,
+      error: "",
+    });
 
   useEffect(() => {
     if (!userInfo) {
-      Router.push('/login');
+      Router.push("/login");
     }
     const fetchData = async () => {
       try {
-        dispatch({ type: 'FETCH_REQUEST' });
+        dispatch({ type: "FETCH_REQUEST" });
         const { data } = await axios.get(`/api/admin/products/${productId}`, {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
-        dispatch({ type: 'FETCH_SUCCESS' });
-        setValue('name', data.name);
-        setValue('slug', data.slug);
-        setValue('price', data.price);
-        setValue('image', data.image);
-        setValue('category', data.category);
-        setValue('brand', data.brand);
-        setValue('count', data.count);
-        setValue('description', data.description);
+        dispatch({ type: "FETCH_SUCCESS" });
+        setValue("name", data.name);
+        setValue("slug", data.slug);
+        setValue("price", data.price);
+        setValue("image", data.image);
+        setValue("category", data.category);
+        setValue("brand", data.brand);
+        setValue("count", data.count);
+        setValue("description", data.description);
       } catch (error) {
-        dispatch({ type: 'FETCH_FAIL', error: getError(error) });
+        dispatch({ type: "FETCH_FAIL", error: getError(error) });
       }
     };
     fetchData();
@@ -108,6 +126,33 @@ function ProductEdit({ params }) {
     formState: { errors },
   } = useForm();
 
+  const uploadHandler = async (e) => {
+    const file = e.target.files[0];
+    const bodyformData = new FormData();
+    bodyformData.append("file", file);
+    try {
+      dispatch({ type: "UPLOAD_REQUEST" });
+      const { data } = await axios.post(`/api/admin/upload`, bodyformData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization: `Bearer ${userInfo.token}`,
+        },
+      });
+      dispatch({ type: "UPLOAD_SUCCESS" });
+      setValue("image", data.secure_url);
+      alert("image uploaded successfuly");
+    } catch (error) {
+      // for (key in error.response.data) {
+      //   if (data.hasOwnProperty(key)) {
+      //     var value = data[key];
+      //     console.log("qq", value);
+      //   }
+      // }
+      console.log("qq", error.response);
+      dispatch({ type: "UPLOAD_FAIL" });
+      alert("upload failed");
+    }
+  };
   const submitHandler = async ({
     name,
     count,
@@ -120,7 +165,7 @@ function ProductEdit({ params }) {
     description,
   }) => {
     try {
-      dispatch({ type: 'UPDATE_REQUEST' });
+      dispatch({ type: "UPDATE_REQUEST" });
 
       await axios.put(
         `/api/admin/products/${productId}`,
@@ -137,13 +182,13 @@ function ProductEdit({ params }) {
         },
         { headers: { authorization: `Bearer ${userInfo.token}` } }
       );
-      dispatch({ type: 'UPDATE_SUCCESS' });
-      alert('Product Updated Successfully');
-      router.push('/admin/products');
+      dispatch({ type: "UPDATE_SUCCESS" });
+      alert("Product Updated Successfully");
+      router.push("/admin/products");
     } catch (error) {
       getError(error);
       console.log(getError(error));
-      dispatch({ type: 'UPDATE_FAIL', payload: getError(error) });
+      dispatch({ type: "UPDATE_FAIL", payload: getError(error) });
     }
   };
 
@@ -215,7 +260,7 @@ function ProductEdit({ params }) {
                               id="name"
                               label="name"
                               error={Boolean(errors.name)}
-                              helperText={errors.name ? 'Name is Rquired' : ''}
+                              helperText={errors.name ? "Name is Rquired" : ""}
                               {...field}
                             ></TextField>
                           )}
@@ -236,7 +281,7 @@ function ProductEdit({ params }) {
                               id="slug"
                               label="Slug"
                               error={Boolean(errors.slug)}
-                              helperText={errors.slug ? 'Slug is Rquired' : ''}
+                              helperText={errors.slug ? "Slug is Rquired" : ""}
                               {...field}
                             ></TextField>
                           )}
@@ -258,7 +303,7 @@ function ProductEdit({ params }) {
                               label="Price"
                               error={Boolean(errors.price)}
                               helperText={
-                                errors.price ? 'Price is Rquired' : ''
+                                errors.price ? "Price is Rquired" : ""
                               }
                               {...field}
                             ></TextField>
@@ -281,13 +326,20 @@ function ProductEdit({ params }) {
                               label="Image"
                               error={Boolean(errors.image)}
                               helperText={
-                                errors.image ? 'Image is Rquired' : ''
+                                errors.image ? "Image is Rquired" : ""
                               }
                               {...field}
                             ></TextField>
                           )}
                         ></Controller>
-                      </ListItem>{' '}
+                      </ListItem>
+                      <ListItem>
+                        <Button component="label" variant="contained">
+                          Upload File
+                          <input type="file" hidden onChange={uploadHandler} />
+                        </Button>
+                        {loadingUpload && <CircularProgress />}
+                      </ListItem>
                       <ListItem>
                         <Controller
                           name="category"
@@ -304,13 +356,13 @@ function ProductEdit({ params }) {
                               label="Category"
                               error={Boolean(errors.category)}
                               helperText={
-                                errors.category ? 'Category is Rquired' : ''
+                                errors.category ? "Category is Rquired" : ""
                               }
                               {...field}
                             ></TextField>
                           )}
                         ></Controller>
-                      </ListItem>{' '}
+                      </ListItem>{" "}
                       <ListItem>
                         <Controller
                           name="brand"
@@ -327,13 +379,13 @@ function ProductEdit({ params }) {
                               label="Brand"
                               error={Boolean(errors.brand)}
                               helperText={
-                                errors.brand ? 'Brand is Rquired' : ''
+                                errors.brand ? "Brand is Rquired" : ""
                               }
                               {...field}
                             ></TextField>
                           )}
                         ></Controller>
-                      </ListItem>{' '}
+                      </ListItem>{" "}
                       <ListItem>
                         <Controller
                           name="count"
@@ -350,7 +402,7 @@ function ProductEdit({ params }) {
                               label="Count"
                               error={Boolean(errors.count)}
                               helperText={
-                                errors.count ? 'Count is Rquired' : ''
+                                errors.count ? "Count is Rquired" : ""
                               }
                               {...field}
                             ></TextField>
@@ -375,8 +427,8 @@ function ProductEdit({ params }) {
                               error={Boolean(errors.description)}
                               helperText={
                                 errors.description
-                                  ? 'Description is Rquired'
-                                  : ''
+                                  ? "Description is Rquired"
+                                  : ""
                               }
                               {...field}
                             ></TextField>
