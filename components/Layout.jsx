@@ -1,5 +1,5 @@
-import Head from 'next/head';
-import React, { useEffect } from 'react';
+import Head from "next/head";
+import React, { useEffect } from "react";
 import {
   AppBar,
   Container,
@@ -22,49 +22,49 @@ import {
   Divider,
   ListItemText,
   InputBase,
-} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import CancelIcon from '@material-ui/icons/Cancel';
-import SearchIcon from '@material-ui/icons/Search';
-import useStyles from '../utils/styles';
-import NextLink from 'next/link';
-import { useContext } from 'react';
-import { Store } from '../utils/store';
-import Cookies from 'js-cookie';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import axios from 'axios';
+} from "@material-ui/core";
+import MenuIcon from "@material-ui/icons/Menu";
+import CancelIcon from "@material-ui/icons/Cancel";
+import SearchIcon from "@material-ui/icons/Search";
+import useStyles from "../utils/styles";
+import NextLink from "next/link";
+import { useContext } from "react";
+import { Store } from "../utils/store";
+import Cookies from "js-cookie";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import axios from "axios";
 
 export default function Layout({ title, description, children }) {
   const { state, dispatch } = useContext(Store);
   const { darkMode, cart, userInfo } = state;
   const [categories, setCategories] = useState([]);
   const [openSidebar, setOpenSidebar] = useState(false);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const router = useRouter();
   const classes = useStyles();
   const theme = createTheme({
     typography: {
       h1: {
-        fontSize: '1.6rem',
+        fontSize: "1.6rem",
         fontWeight: 400,
-        margin: '1rem 0',
+        margin: "1rem 0",
       },
 
       h2: {
-        fontSize: '1.4rem',
+        fontSize: "1.4rem",
         fontWeight: 400,
-        margin: '1rem 0',
+        margin: "1rem 0",
       },
     },
     palette: {
-      type: darkMode ? 'dark' : 'light',
+      type: darkMode ? "dark" : "light",
       primary: {
-        main: '#f0c000',
+        main: "#f0c000",
       },
       secondary: {
-        main: '#208080',
+        main: "#208080",
       },
     },
   });
@@ -74,7 +74,7 @@ export default function Layout({ title, description, children }) {
 
   const fetchCategories = async () => {
     try {
-      const { data } = await axios.get('/api/products/categories');
+      const { data } = await axios.get("/api/products/categories");
       setCategories(data);
     } catch (error) {
       alert(error);
@@ -87,25 +87,25 @@ export default function Layout({ title, description, children }) {
     setOpenSidebar(false);
   };
   const handleChangeDarkMode = () => {
-    dispatch({ type: darkMode ? 'DARK_MODE_OFF' : 'DARK_MODE_ON' });
+    dispatch({ type: darkMode ? "DARK_MODE_OFF" : "DARK_MODE_ON" });
     const newDarkMode = !darkMode;
-    Cookies.set('darkMode', newDarkMode ? 'ON' : 'OFF');
+    Cookies.set("darkMode", newDarkMode ? "ON" : "OFF");
   };
   const loginClickHandler = (e) => {
     setAnchorEl(e.currentTarget);
   };
   const loginMenuCloseHandler = (e, redirect) => {
     setAnchorEl(null);
-    if (redirect) {
+    if (redirect !== "backdropClick") {
       router.push(redirect);
     }
   };
   const logoutHandler = () => {
     setAnchorEl(null);
-    dispatch({ type: 'USER_LOGOUT' });
-    Cookies.remove('userInfo');
-    Cookies.remove('cartItems');
-    router.push('/');
+    dispatch({ type: "USER_LOGOUT" });
+    Cookies.remove("userInfo");
+    Cookies.remove("cartItems");
+    router.push("/");
   };
   const queryChangeHandler = (e) => {
     setQuery(e.target.value);
@@ -118,7 +118,7 @@ export default function Layout({ title, description, children }) {
   return (
     <div>
       <Head>
-        <title> {title ? `${title} - Next Amazona` : 'Next Amazona'} </title>
+        <title> {title ? `${title} - Next Amazona` : "Next Amazona"} </title>
         {description && <meta name="description" content={description}></meta>}
         <link
           href="https://fonts.googleapis.com/css?family=Roboto:300,400,600,700&display=swap"
@@ -216,7 +216,7 @@ export default function Layout({ title, description, children }) {
                         Cart
                       </Badge>
                     ) : (
-                      'Cart'
+                      "Cart"
                     )}
                   </Typography>
                 </Link>
@@ -239,19 +239,19 @@ export default function Layout({ title, description, children }) {
                     onClose={loginMenuCloseHandler}
                   >
                     <MenuItem
-                      onClick={(e) => loginMenuCloseHandler(e, '/profile')}
+                      onClick={(e) => loginMenuCloseHandler(e, "/profile")}
                     >
                       Profile
                     </MenuItem>
                     <MenuItem
-                      onClick={(e) => loginMenuCloseHandler(e, '/orderHistory')}
+                      onClick={(e) => loginMenuCloseHandler(e, "/orderHistory")}
                     >
                       Order History
                     </MenuItem>
                     {userInfo.isAdmin && (
                       <MenuItem
                         onClick={(e) =>
-                          loginMenuCloseHandler(e, '/admin/dashboard')
+                          loginMenuCloseHandler(e, "/admin/dashboard")
                         }
                       >
                         Admin Dashboard
