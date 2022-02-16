@@ -11,14 +11,14 @@ handler.use(isAuth, isAdmin);
 handler.post(async (req, res) => {
   await db.connect();
   const newProduct = new Product({
-    name: "sample Name",
-    slug: "sample-slug-" + Math.random(),
-    image: "images/shirt1.jpg",
+    name: "",
+    slug: "",
+    image: "/images/yourImage.jpg",
     price: 0,
-    category: "sample category",
-    brand: "sample brand",
+    category: "",
+    brand: "",
     count: 0,
-    description: "sample description",
+    description: "",
     rating: 0,
     numReviews: 0,
   });
