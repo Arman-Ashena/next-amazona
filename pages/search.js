@@ -249,7 +249,6 @@ export async function getServerSideProps({ query }) {
   const priceFilter =
     price && price != "all"
       ? {
-          // price : 10-50
           //compare price with this two filter: gte(greater than) and lte(les than)
           price: {
             $gte: Number(price.split("-")[0]),
