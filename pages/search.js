@@ -227,7 +227,7 @@ export default function Search(props) {
 }
 
 export async function getServerSideProps({ query }) {
-  //db.connect();
+  db.connect();
   const pageSize = query.pageSize || PAGE_SIZE;
   const page = query.page || 1;
   const category = query.category || "";
@@ -300,7 +300,7 @@ export async function getServerSideProps({ query }) {
     ...brandFilter,
     ...ratingFilter,
   });
-  //await db.disconnect();
+  await db.disconnect();
   const products = productDocs.map(db.convertDocToObj);
   return {
     props: {
