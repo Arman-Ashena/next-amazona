@@ -59,6 +59,7 @@ export default function Search(props) {
   }) => {
     const path = router.pathname;
     const { query } = router;
+
     if (page) query.page = page;
     if (category) query.category = category;
     if (brand) query.brand = brand;
@@ -68,8 +69,8 @@ export default function Search(props) {
     if (searchQuery) query.searchQuery = searchQuery;
     if (price) query.price = price;
     if (rating) query.rating = rating;
-
-    router.push({ pathname: path, query: query }, undefined, { shallow: true });
+    console.log("wer", path, query);
+    router.push({ pathname: path, query: query });
   };
 
   const categoryHandler = (e) => {
@@ -226,7 +227,7 @@ export default function Search(props) {
 }
 
 export async function getServerSideProps({ query }) {
-  db.connect();
+  //db.connect();
   const pageSize = query.pageSize || PAGE_SIZE;
   const page = query.page || 1;
   const category = query.category || "";
@@ -299,7 +300,7 @@ export async function getServerSideProps({ query }) {
     ...brandFilter,
     ...ratingFilter,
   });
-  await db.disconnect();
+  //await db.disconnect();
   const products = productDocs.map(db.convertDocToObj);
   return {
     props: {
