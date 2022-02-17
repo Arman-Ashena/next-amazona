@@ -239,7 +239,7 @@ export async function getServerSideProps({ query }) {
 
   const queryFilter =
     searchQuery && searchQuery !== "all"
-      ? { name: { $regex: searchQuery, $options: "1" } }
+      ? { name: { $regex: searchQuery, $options: "i" } }
       : {};
 
   const brandFilter = brand && brand != "all" ? { brand } : {};
